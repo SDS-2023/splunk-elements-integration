@@ -126,8 +126,8 @@ class WsAppConnector(BaseConnector):
 
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
-    def _get_token(self, client_id, client_secret):
-        token_url = 'https://api.connect-stg.fsapi.com/as/token.oauth2'
+    def _get_token(self, client_id, client_secret, base_url):
+        token_url = base_url + 'as/token.oauth2'
         client = BackendApplicationClient(client_id=client_id)
         oauth = OAuth2Session(client=client)
         token = oauth.fetch_token(token_url=token_url, client_id=client_id, client_secret=client_secret)
@@ -214,7 +214,8 @@ class WsAppConnector(BaseConnector):
         # make rest call
         client_id = self._client_id
         client_secret = self._client_secret
-        token = self._get_token(client_id, client_secret)
+        base_url = self._base_url
+        token = self._get_token(client_id, client_secret, base_url)
 
         headers = {'Authorization': f'Bearer ' + token}
         ret_val, response = self._make_rest_call(
@@ -237,13 +238,7 @@ class WsAppConnector(BaseConnector):
         k = 1
         for i in response['items']:
             action_result.add_data(i)
-            print(i)
-            if i['severity'] == "warning":
-                severity = "low"
-            elif i['severity'] == "critical":
-                severity = "high"
-            else:
-                severity = "medium"
+            severity = i['severity']
             artifacts.append({"name": 'Event '+str(k),  "label": "event",  "severity": severity, 'artifact_type': 'event ', "data": i, "cef": i})
             k+=1
             
