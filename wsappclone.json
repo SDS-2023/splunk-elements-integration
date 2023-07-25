@@ -1,0 +1,112 @@
+{
+    "appid": "4a93a121-6c94-4bd5-a42e-9e76879e4a80",
+    "name": "WS APP clone",
+    "description": "App",
+    "type": "network device",
+    "product_vendor": "WithSecure_clone_1689021551709_clone_1689060843692",
+    "logo": "wsapp.png",
+    "logo_dark": "wsapp_dark.png",
+    "product_name": "WS App_clone_1689021551709_clone_1689060843692",
+    "python_version": "3",
+    "product_version_regex": ".*",
+    "publisher": "Splunk",
+    "license": "Copyright (c) Splunk, 2023",
+    "app_version": "3.0.0",
+    "utctime_updated": "2023-07-24T21:00:29.469684Z",
+    "package_name": "phantom_wsappclone",
+    "main_module": "wsapp_connector.py",
+    "min_phantom_version": "6.0.2.127725",
+    "app_wizard_version": "1.0.0",
+    "configuration": {
+        "base_url": {
+            "description": "Base URL",
+            "data_type": "string",
+            "required": true,
+            "value_list": [],
+            "default": "",
+            "order": 0,
+            "name": "base_url",
+            "id": 0
+        },
+        "client_id": {
+            "description": "client_id",
+            "data_type": "password",
+            "required": true,
+            "order": 1,
+            "name": "client_id",
+            "id": 1
+        },
+        "client_secret": {
+            "description": "client_secret",
+            "data_type": "password",
+            "required": true,
+            "order": 2,
+            "name": "client_secret",
+            "id": 2
+        }
+    },
+    "actions": [
+        {
+            "action": "test connectivity",
+            "identifier": "test_connectivity",
+            "description": "Validate the asset configuration for connectivity using supplied configuration",
+            "verbose": "",
+            "type": "test",
+            "read_only": true,
+            "parameters": {},
+            "output": [],
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "get_events",
+            "identifier": "get_events",
+            "description": "get events from WS API",
+            "verbose": "",
+            "type": "generic",
+            "read_only": false,
+            "parameters": {},
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "column_name": "status",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        }
+    ],
+    "copied_from_id": 13,
+    "copied_from_version": "2.9.0",
+    "directory": "wsappclone_4a93a121-6c94-4bd5-a42e-9e76879e4a80",
+    "version": 1,
+    "appname": "-",
+    "executable": "spawn3",
+    "disabled": false,
+    "pip3_dependencies": {
+        "pypi": [
+            {
+                "module": "oauthlib"
+            },
+            {
+                "module": "requests-oauthlib"
+            }
+        ]
+    },
+    "custom_made": true
+}
