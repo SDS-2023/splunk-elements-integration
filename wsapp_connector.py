@@ -223,7 +223,7 @@ class WsAppConnector(BaseConnector):
         )
         organizationId = response["organizationId"]
         params = {"organizationId": organizationId, "engine": "",
-                  "serverTimestampStart": "2022-08-01T00:00:00Z"}
+                  "persistenceTimestampStart": "2022-08-01T00:00:01Z"}
         ret_val, response = self._make_rest_call(
             "security-events/v1/security-events", action_result, params=params, headers=headers
         )
