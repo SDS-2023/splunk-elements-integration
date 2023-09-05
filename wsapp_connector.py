@@ -18,8 +18,6 @@ import phantom.rules as ph
 import requests
 import json
 from bs4 import BeautifulSoup
-from oauthlib.oauth2 import BackendApplicationClient
-from requests_oauthlib import OAuth2Session
 from datetime import datetime, timezone, timedelta
 
 class RetVal(tuple):
