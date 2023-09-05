@@ -339,7 +339,7 @@ class WsAppConnector(BaseConnector):
 
         # Add the response into the data section
         
-        print("Liczba Eventów: ", len(action_result.get_data()))
+        print("Event count: ", len(action_result.get_data()))
         print("Token: ", token)
         print("OrganizationId: ", organizationId)
         
