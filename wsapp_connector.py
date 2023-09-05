@@ -11,6 +11,7 @@ from __future__ import print_function, unicode_literals
 import phantom.app as phantom
 from phantom.base_connector import BaseConnector
 from phantom.action_result import ActionResult
+import phantom.rules as ph
 
 # Usage of the consts file is recommended
 # from wsapp_consts import *
@@ -19,7 +20,7 @@ import json
 from bs4 import BeautifulSoup
 from oauthlib.oauth2 import BackendApplicationClient
 from requests_oauthlib import OAuth2Session
-
+from datetime import datetime, timezone, timedelta
 
 class RetVal(tuple):
 
@@ -128,10 +129,14 @@ class WsAppConnector(BaseConnector):
 
     def _get_token(self, client_id, client_secret, base_url):
         token_url = base_url + 'as/token.oauth2'
-        client = BackendApplicationClient(client_id=client_id)
-        oauth = OAuth2Session(client=client)
-        token = oauth.fetch_token(token_url=token_url, client_id=client_id, client_secret=client_secret)
-        return token["access_token"]
+        data = {
+            "grant_type": "client_credentials",
+            "scope": "connect.api.read connect.api.write",
+        }
+        response = requests.post(token_url, auth=(client_id, client_secret), data=data)
+        token_json = response.json()
+        token = token_json.get("access_token")
+        return token
 
     def _make_rest_call(self, endpoint, action_result, method="get", **kwargs):
         # **kwargs can be any additional parameters that requests.request accepts
@@ -140,6 +145,7 @@ class WsAppConnector(BaseConnector):
 
         kwargs['headers'] = kwargs.get("headers")
         kwargs['params'] = kwargs.get("params")
+        kwargs['json'] = kwargs.get("json")
         resp_json = None
 
         try:
@@ -166,6 +172,7 @@ class WsAppConnector(BaseConnector):
                     phantom.APP_ERROR, "Error Connecting to server. Details: {0}".format(str(e))
                 ), resp_json
             )
+        
         return self._process_json_response(r, action_result)
 
     def _handle_test_connectivity(self, param):
@@ -216,7 +223,6 @@ class WsAppConnector(BaseConnector):
         client_secret = self._client_secret
         base_url = self._base_url
         token = self._get_token(client_id, client_secret, base_url)
-
         headers = {'Authorization': f'Bearer ' + token}
         ret_val, response = self._make_rest_call(
             'whoami/v1/whoami', action_result, params=None, headers=headers
@@ -227,7 +233,15 @@ class WsAppConnector(BaseConnector):
         ret_val, response = self._make_rest_call(
             "security-events/v1/security-events", action_result, params=params, headers=headers
         )
-
+        if response.get("items") is not None :
+            events = response.get("items")
+            while response.get("nextAnchor") is not None:
+                params["anchor"] = response.get("nextAnchor")
+                ret_val, response = self._make_rest_call(
+                    "security-events/v1/security-events", action_result, params=params, headers=headers
+                    )
+                events.extend(response.get("items"))
+                
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
             # for now the return is commented out, but after implementation, return from here
@@ -236,13 +250,13 @@ class WsAppConnector(BaseConnector):
         # Now post process the data,  uncomment code as you deem fit
         artifacts = []
         k = 1
-        for i in response['items']:
-            action_result.add_data(i)
-            severity = i['severity']
-            artifacts.append({"name": 'Event '+str(k),  "label": "event",  "severity": severity, 'artifact_type': 'event ', "data": i, "cef": i})
-            k+=1
-            
-        container = {'name': 'WithSecure - security events', 'label': 'events', 'container_type': 'default', 'artifacts': artifacts}
+        if events is not None:
+            for i in events:
+                action_result.add_data(i)
+                severity = i['severity']
+                artifacts.append({"name": 'Event '+str(k),  "label": "event",  "severity": severity, 'artifact_type': 'event ', "data": i, "cef": i})
+                k+=1
+        container = {'containerId': 100, 'name': 'WithSecure - security events', 'label': 'events', 'container_type': 'default', 'artifacts': artifacts}
         success, message, container_id = self.save_container(container)
         print(success, "M: ", message)
         # Add the response into the data section
@@ -253,6 +267,150 @@ class WsAppConnector(BaseConnector):
         
         # Add a dictionary that is made up of the most important values from data into the summary
         summary = action_result.update_summary({'Completed': True, 'organizationID': organizationId})
+        summary['num_data'] = len(action_result.get_data())
+
+        # Return success, no need to set the message, only the status
+        # BaseConnector will create a textual message based off of the summary dictionary
+        return action_result.set_status(phantom.APP_SUCCESS)
+
+        # For now return Error with a message, in case of success we don't set the message, but use the summary
+        # return action_result.set_status(phantom.APP_ERROR, "Action not yet implemented")
+
+    def _handle_poll_events(self, param):
+        # Implement the handler here
+        # use self.save_progress(...) to send progress messages back to the platform
+        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        # Add an action result object to self (BaseConnector) to represent the action for this param
+        action_result = self.add_action_result(ActionResult(dict(param)))
+
+        # Access action parameters passed in the 'param' dictionary
+
+        # Required values can be accessed directly
+        # required_parameter = param['required_parameter']
+
+        # Optional values should use the .get() function
+
+        # make rest call
+        client_id = self._client_id
+        client_secret = self._client_secret
+        base_url = self._base_url
+        token = self._get_token(client_id, client_secret, base_url)
+        headers = {'Authorization': f'Bearer ' + token}
+        ret_val, response = self._make_rest_call(
+            'whoami/v1/whoami', action_result, params=None, headers=headers
+        )
+        organizationId = response["organizationId"]
+        info = self.get_container_info(container_id=224)
+        timestamp = datetime.strptime(info[1]['artifact_update_time'], "%Y-%m-%dT%H:%M:%S.%fZ")
+        timestamp = timestamp.strftime("%Y-%m-%dT%H:%M:%SZ")
+        print(timestamp)
+        params = {"organizationId": organizationId, "engine": "",
+                  "persistenceTimestampStart": timestamp}
+        ret_val, response = self._make_rest_call(
+            "security-events/v1/security-events", action_result, params=params, headers=headers
+        )
+        if response.get("items") is not None :
+            events = response.get("items")
+            while response.get("nextAnchor") is not None:
+                params["anchor"] = response.get("nextAnchor")
+                ret_val, response = self._make_rest_call(
+                    "security-events/v1/security-events", action_result, params=params, headers=headers
+                    )
+                events.extend(response.get("items"))
+                
+        if phantom.is_fail(ret_val):
+            # the call to the 3rd party device or service failed, action result should contain all the error details
+            # for now the return is commented out, but after implementation, return from here
+            return action_result.get_status()
+            pass
+        # Now post process the data,  uncomment code as you deem fit
+        artifacts = []
+        k = 1
+        container_id = self.get_container_id()
+        if events is not None:
+            for i in events:
+                action_result.add_data(i)
+                severity = i['severity']
+                artifacts.append({"name": 'Event '+str(k),  "label": severity,  "severity": severity,
+                                  'artifact_type': 'event ', "data": i, "cef": i, "container_id": 224, "run_automation": True, 'tags': 'new'})
+                k+=1
+        if len(artifacts) >=1:
+            success, message, id_list = self.save_artifacts(artifacts)
+
+        # Add the response into the data section
+        
+        print("Liczba Eventów: ", len(action_result.get_data()))
+        print("Token: ", token)
+        print("OrganizationId: ", organizationId)
+        
+        # Add a dictionary that is made up of the most important values from data into the summary
+        summary = action_result.update_summary({'Completed': True, 'organizationID': container_id})
+        summary['num_data'] = len(action_result.get_data())
+
+        # Return success, no need to set the message, only the status
+        # BaseConnector will create a textual message based off of the summary dictionary
+        return action_result.set_status(phantom.APP_SUCCESS)
+
+        # For now return Error with a message, in case of success we don't set the message, but use the summary
+        # return action_result.set_status(phantom.APP_ERROR, "Action not yet implemented")
+
+    def _handle_isolate_device(self, param):
+        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        # Add an action result object to self (BaseConnector) to represent the action for this param
+        action_result = self.add_action_result(ActionResult(dict(param)))
+        
+        devices = [param['device_id']]
+        client_id = self._client_id
+        client_secret = self._client_secret
+        base_url = self._base_url
+        token = self._get_token(client_id, client_secret, base_url)
+        headers = {'Authorization': f'Bearer ' + token}
+        ret_val, response = self._make_rest_call(
+            'whoami/v1/whoami', action_result, params=None, headers=headers
+        )
+        organizationId = response["organizationId"]
+        params = {"organizationId": organizationId, "deviceId": param['device_id']}
+        ret_val, response = self._make_rest_call(
+            "devices/v1/operations", action_result, params=params, headers=headers
+        )
+        operations = response['items']
+        ret_val, response = self._make_rest_call(
+            "devices/v1/devices", action_result, params=params, headers=headers
+        )
+        state = response['items'][0]['state']
+        print(state)
+        isolated = False
+        isolate_queued = False
+        for i in operations:
+            if i['operationName'] == 'isolateFromNetwork' and i['status'] == 'pending':
+                isolate_queued = True
+                continue
+                
+        if state != 'isolated' and isolate_queued == False:
+            headers = {"Content-Type": "application/json", 'Authorization': f'Bearer {token}'}
+            data = {"operation": "isolateFromNetwork", 
+                    "parameters": {"message": "Your device will be isolated"}, "targets": devices}
+            ret_val, response = self._make_rest_call(
+                'devices/v1/operations', action_result, json=data, headers=headers, method="post")
+        
+            if response.get('multistatus') is not None:
+                for i in response['multistatus']:
+                    if i["status"] == 202:
+                        print("Device: ", i["target"], "SUCCESSFULLY ISOLATED")
+                        isolated = True
+                    else:
+                        print("Device: ", i["target"], "ERROR OCCURRED")
+            else:
+                print('Token Request Failed:', response.text)
+        else:
+            print("Device is alredy isolated, or isolating is queued")
+        if phantom.is_fail(ret_val):
+            # the call to the 3rd party device or service failed, action result should contain all the error details
+            # for now the return is commented out, but after implementation, return from here
+            return action_result.get_status()
+            pass
+         # Add a dictionary that is made up of the most important values from data into the summary
+        summary = action_result.update_summary({'Completed': True, 'isolated': isolated})
         summary['num_data'] = len(action_result.get_data())
 
         # Return success, no need to set the message, only the status
@@ -275,6 +433,12 @@ class WsAppConnector(BaseConnector):
 
         if action_id == 'get_events':
             ret_val = self._handle_get_events(param)
+
+        if action_id == 'poll_events':
+            ret_val = self._handle_poll_events(param)
+
+        if action_id == 'isolate_device':
+            ret_val = self._handle_isolate_device(param)
 
         if action_id == 'test_connectivity':
             ret_val = self._handle_test_connectivity(param)

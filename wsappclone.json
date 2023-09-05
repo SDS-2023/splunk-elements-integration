@@ -11,8 +11,8 @@
     "product_version_regex": ".*",
     "publisher": "Splunk",
     "license": "Copyright (c) Splunk, 2023",
-    "app_version": "3.0.0",
-    "utctime_updated": "2023-07-24T21:00:29.469684Z",
+    "app_version": "5.9.0",
+    "utctime_updated": "2023-09-05T10:58:20.336513Z",
     "package_name": "phantom_wsappclone",
     "main_module": "wsapp_connector.py",
     "min_phantom_version": "6.0.2.127725",
@@ -67,6 +67,86 @@
             "parameters": {},
             "output": [
                 {
+                    "data_path": "action_result.data.device.*.id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.device.*.name",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.engine",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.details.*.risk",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.details.*.userSam",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.details.*.categories",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.details.*.incidentId",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.details.*.resolution",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.details.*.fingerprint",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.details.*.clientTimestamp",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.details.*.incidentPublicId",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.details.*.initialDetectionTimestamp",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.severity",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.userName",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.organization.*.id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.organization.*.name",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.clientTimestamp",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.serverTimestamp",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.eventTransactionId",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.persistenceTimestamp",
+                    "data_type": "string"
+                },
+                {
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "column_name": "status",
@@ -89,10 +169,175 @@
                 "type": "table"
             },
             "versions": "EQ(*)"
+        },
+        {
+            "action": "poll_events",
+            "identifier": "poll_events",
+            "description": "WithSecure API security event polling",
+            "verbose": "",
+            "type": "generic",
+            "read_only": false,
+            "parameters": {},
+            "output": [
+                {
+                    "data_path": "action_result.data.device.*.id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.device.*.name",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.engine",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.details.*.risk",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.details.*.userSam",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.details.*.categories",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.details.*.incidentId",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.details.*.resolution",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.details.*.fingerprint",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.details.*.clientTimestamp",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.details.*.incidentPublicId",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.details.*.initialDetectionTimestamp",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.severity",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.userName",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.organization.*.id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.organization.*.name",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.clientTimestamp",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.serverTimestamp",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.eventTransactionId",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.persistenceTimestamp",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "column_name": "status",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "isolate_device",
+            "identifier": "isolate_device",
+            "description": "Isolates device",
+            "verbose": "",
+            "type": "generic",
+            "read_only": false,
+            "parameters": {
+                "device_id": {
+                    "description": "device UUID to isolate",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": false,
+                    "contains": [],
+                    "value_list": [],
+                    "default": "",
+                    "order": 0,
+                    "name": "device_id"
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.device_id",
+                    "data_type": "string",
+                    "contains": [],
+                    "column_name": "device_id",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "column_name": "status",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
         }
     ],
     "copied_from_id": 13,
-    "copied_from_version": "2.9.0",
+    "copied_from_version": "5.8.0",
     "directory": "wsappclone_4a93a121-6c94-4bd5-a42e-9e76879e4a80",
     "version": 1,
     "appname": "-",
@@ -105,6 +350,9 @@
             },
             {
                 "module": "requests-oauthlib"
+            },
+            {
+                "module": "datetime"
             }
         ]
     },
