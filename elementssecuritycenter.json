@@ -1,0 +1,73 @@
+{
+    "appid": "db25198d-0715-4b6c-85f7-fa5484c5c468",
+    "name": "Elements Security Center",
+    "description": "WithSecure Elements Security Center app for Splunk SOAR.",
+    "type": "endpoint",
+    "product_vendor": "WithSecure",
+    "logo": "elementssecuritycenter.png",
+    "logo_dark": "elementssecuritycenter_dark.png",
+    "product_name": "Elements Security Center",
+    "python_version": "3",
+    "product_version_regex": ".*",
+    "publisher": "Poznan University of Technology",
+    "license": "Copyright (c) Poznan University of Technology, 2023",
+    "app_version": "1.0.0",
+    "utctime_updated": "2023-10-04T17:05:43.305312Z",
+    "package_name": "phantom_elementssecuritycenter",
+    "main_module": "elementssecuritycenter_connector.py",
+    "min_phantom_version": "6.0.2.127725",
+    "app_wizard_version": "1.0.0",
+    "configuration": {},
+    "actions": [
+        {
+            "action": "test connectivity",
+            "identifier": "test_connectivity",
+            "description": "Validate the asset configuration for connectivity using supplied configuration",
+            "verbose": "",
+            "type": "test",
+            "read_only": true,
+            "parameters": {},
+            "output": [],
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "on poll",
+            "description": "Callback action for the on_poll ingest functionality",
+            "type": "ingest",
+            "identifier": "on_poll",
+            "read_only": true,
+            "parameters": {
+                "container_id": {
+                    "data_type": "string",
+                    "order": 0,
+                    "description": "Container IDs to limit the ingestion to",
+                    "allow_list": true
+                },
+                "start_time": {
+                    "data_type": "numeric",
+                    "order": 1,
+                    "description": "Start of time range, in epoch time (milliseconds)",
+                    "verbose": "If not specified, the default is past 10 days"
+                },
+                "end_time": {
+                    "data_type": "numeric",
+                    "order": 2,
+                    "description": "End of time range, in epoch time (milliseconds)",
+                    "verbose": "If not specified, the default is now"
+                },
+                "container_count": {
+                    "data_type": "numeric",
+                    "order": 3,
+                    "description": "Maximum number of container records to query for."
+                },
+                "artifact_count": {
+                    "data_type": "numeric",
+                    "order": 4,
+                    "description": "Maximum number of artifact records to query for."
+                }
+            },
+            "output": [],
+            "versions": "EQ(*)"
+        }
+    ]
+}
