@@ -18,6 +18,9 @@ import requests
 import json
 from bs4 import BeautifulSoup
 
+from modules._handle_on_poll import _handle_on_poll
+from modules._handle_isolate_device import _handle_isolate_device
+from modules._handle_update_timestamp import _handle_update_timestamp
 
 class RetVal(tuple):
 
@@ -38,6 +41,10 @@ class ElementsSecurityCenterConnector(BaseConnector):
         # Do note that the app json defines the asset config, so please
         # modify this as you deem fit.
         self._base_url = None
+
+        self._client_id = None
+        self._client_secret = None
+        self._container_id = None
 
     def _process_empty_response(self, response, action_result):
         if response.status_code == 200:
@@ -123,10 +130,13 @@ class ElementsSecurityCenterConnector(BaseConnector):
         return RetVal(action_result.set_status(phantom.APP_ERROR, message), None)
 
     def _make_rest_call(self, endpoint, action_result, method="get", **kwargs):
-        # **kwargs can be any additional parameters that requests.request accepts
+    # **kwargs can be any additional parameters that requests.request accepts
 
         config = self.get_config()
 
+        kwargs['headers'] = kwargs.get("headers")
+        kwargs['params'] = kwargs.get("params")
+        kwargs['json'] = kwargs.get("json")
         resp_json = None
 
         try:
@@ -153,8 +163,8 @@ class ElementsSecurityCenterConnector(BaseConnector):
                     phantom.APP_ERROR, "Error Connecting to server. Details: {0}".format(str(e))
                 ), resp_json
             )
-
-        return self._process_response(r, action_result)
+        
+        return self._process_json_response(r, action_result)
 
     def _handle_test_connectivity(self, param):
         # Add an action result object to self (BaseConnector) to represent the action for this param
@@ -192,10 +202,17 @@ class ElementsSecurityCenterConnector(BaseConnector):
 
         self.debug_print("action_id", self.get_action_identifier())
 
-        if action_id == 'test_connectivity':
-            ret_val = self._handle_test_connectivity(param)
         if action_id == 'on_poll':
-            pass
+            ret_val = _handle_on_poll(self, param)
+            
+        if action_id == 'isolate_device':
+            ret_val = _handle_isolate_device(self, param)
+
+        if action_id == 'update_timestamp':
+            ret_val = _handle_update_timestamp(self, param)
+
+        elif action_id == 'test_connectivity':
+            ret_val = self._handle_test_connectivty(param)
 
         return ret_val
 
@@ -217,7 +234,10 @@ class ElementsSecurityCenterConnector(BaseConnector):
         """
 
         self._base_url = config.get('base_url')
-
+        self._client_id = config.get('client_id')
+        self._client_secret = config.get('client_secret')
+        self._container_id = config.get('container_id')
+        
         return phantom.APP_SUCCESS
 
     def finalize(self):
