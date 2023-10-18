@@ -18,9 +18,7 @@ import requests
 import json
 from bs4 import BeautifulSoup
 
-from modules._handle_on_poll import _handle_on_poll
-from modules._handle_isolate_device import _handle_isolate_device
-from modules._handle_update_timestamp import _handle_update_timestamp
+import sei
 
 class RetVal(tuple):
 
@@ -44,7 +42,6 @@ class ElementsSecurityCenterConnector(BaseConnector):
 
         self._client_id = None
         self._client_secret = None
-        self._container_id = None
 
     def _process_empty_response(self, response, action_result):
         if response.status_code == 200:
@@ -201,18 +198,12 @@ class ElementsSecurityCenterConnector(BaseConnector):
         action_id = self.get_action_identifier()
 
         self.debug_print("action_id", self.get_action_identifier())
-
         if action_id == 'on_poll':
-            ret_val = _handle_on_poll(self, param)
-            
-        if action_id == 'isolate_device':
-            ret_val = _handle_isolate_device(self, param)
-
-        if action_id == 'update_timestamp':
-            ret_val = _handle_update_timestamp(self, param)
-
+            ret_val = sei.on_poll(self, param)   
+        elif action_id == 'isolate_device':
+            ret_val = sei.isolate_device(self, param)
         elif action_id == 'test_connectivity':
-            ret_val = self._handle_test_connectivty(param)
+            ret_val = self._handle_test_connectivity(param)
 
         return ret_val
 
@@ -236,7 +227,6 @@ class ElementsSecurityCenterConnector(BaseConnector):
         self._base_url = config.get('base_url')
         self._client_id = config.get('client_id')
         self._client_secret = config.get('client_secret')
-        self._container_id = config.get('container_id')
         
         return phantom.APP_SUCCESS
 

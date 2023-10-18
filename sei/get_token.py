@@ -1,7 +1,7 @@
 import requests
 import json
 
-def _get_token(client_id, client_secret, base_url):
+def get_token(client_id, client_secret, base_url):
     token_url = base_url + 'as/token.oauth2'
     data = {
         "grant_type": "client_credentials",

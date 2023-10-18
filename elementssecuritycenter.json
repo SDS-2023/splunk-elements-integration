@@ -1,18 +1,18 @@
 {
-    "appid": "5bcff6f9-3a65-49e6-8f7c-427898bde829",
+    "appid": "db25198d-0715-4b6c-85f7-fa5484c5c468",
     "name": "Elements Security Center",
     "description": "WithSecure Elements Security Center app for Splunk SOAR.",
     "type": "endpoint",
-    "product_vendor": "WithSecure_clone_1696688904952",
+    "product_vendor": "WithSecure",
     "logo": "elementssecuritycenter.png",
     "logo_dark": "elementssecuritycenter_dark.png",
-    "product_name": "Elements Security Center_clone_1696688904952",
+    "product_name": "Elements Security Center",
     "python_version": "3",
     "product_version_regex": ".*",
     "publisher": "Poznan University of Technology",
     "license": "Copyright (c) Poznan University of Technology, 2023",
-    "app_version": "2.1.0",
-    "utctime_updated": "2023-10-11T15:53:14.976185Z",
+    "app_version": "1.0.0",
+    "utctime_updated": "2023-10-04T17:05:43.305312Z",
     "package_name": "phantom_elementssecuritycenter",
     "main_module": "elementssecuritycenter_connector.py",
     "min_phantom_version": "6.0.2.127725",
@@ -43,16 +43,6 @@
             "order": 2,
             "name": "client_secret",
             "id": 2
-        },
-        "container_id": {
-            "description": "container ID",
-            "data_type": "numeric",
-            "required": false,
-            "value_list": [],
-            "default": "",
-            "order": 3,
-            "name": "container_id",
-            "id": 3
         }
     },
     "actions": [
@@ -114,41 +104,6 @@
                 {
                     "data_path": "action_result.message",
                     "data_type": "string"
-                },
-                {
-                    "data_path": "summary.total_objects",
-                    "data_type": "numeric"
-                },
-                {
-                    "data_path": "summary.total_objects_successful",
-                    "data_type": "numeric"
-                }
-            ],
-            "render": {
-                "type": "table"
-            },
-            "versions": "EQ(*)"
-        },
-        {
-            "action": "update_timestamp",
-            "identifier": "update_timestamp",
-            "description": "Update container timestamp for polling action",
-            "verbose": "",
-            "type": "generic",
-            "read_only": false,
-            "parameters": {},
-            "output": [
-                {
-                    "data_path": "action_result.status",
-                    "data_type": "string",
-                    "column_name": "status",
-                    "column_order": 0
-                },
-                {
-                    "data_path": "action_result.summary.timestamp",
-                    "data_type": "string",
-                    "column_name": "status",
-                    "column_order": 0
                 },
                 {
                     "data_path": "summary.total_objects",
