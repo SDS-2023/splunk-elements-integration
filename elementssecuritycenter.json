@@ -1,0 +1,159 @@
+{
+    "appid": "db25198d-0715-4b6c-85f7-fa5484c5c468",
+    "name": "Elements Security Center",
+    "description": "WithSecure Elements Security Center app for Splunk SOAR.",
+    "type": "endpoint",
+    "product_vendor": "WithSecure",
+    "logo": "elementssecuritycenter.png",
+    "logo_dark": "elementssecuritycenter_dark.png",
+    "product_name": "Elements Security Center",
+    "python_version": "3",
+    "product_version_regex": ".*",
+    "publisher": "Poznan University of Technology",
+    "license": "Copyright (c) Poznan University of Technology, 2023",
+    "app_version": "1.0.0",
+    "utctime_updated": "2023-10-04T17:05:43.305312Z",
+    "package_name": "phantom_elementssecuritycenter",
+    "main_module": "elementssecuritycenter_connector.py",
+    "min_phantom_version": "6.0.2.127725",
+    "app_wizard_version": "1.0.0",
+    "configuration": {
+        "base_url": {
+            "description": "Base URL",
+            "data_type": "string",
+            "required": true,
+            "value_list": [],
+            "default": "",
+            "order": 0,
+            "name": "base_url",
+            "id": 0
+        },
+        "client_id": {
+            "description": "client_id",
+            "data_type": "password",
+            "required": true,
+            "order": 1,
+            "name": "client_id",
+            "id": 1
+        },
+        "client_secret": {
+            "description": "client_secret",
+            "data_type": "password",
+            "required": true,
+            "order": 2,
+            "name": "client_secret",
+            "id": 2
+        }
+    },
+    "actions": [
+        {
+            "action": "test connectivity",
+            "identifier": "test_connectivity",
+            "description": "Validate the asset configuration for connectivity using supplied configuration",
+            "verbose": "",
+            "type": "test",
+            "read_only": true,
+            "parameters": {},
+            "output": [],
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "on poll",
+            "description": "Callback action for the on_poll ingest functionality",
+            "type": "ingest",
+            "identifier": "on_poll",
+            "read_only": true,
+            "parameters": {},
+            "output": [],
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "isolate_device",
+            "identifier": "isolate_device",
+            "description": "Isolate devices with critical severity",
+            "verbose": "",
+            "type": "generic",
+            "read_only": false,
+            "parameters": {
+                "device_id": {
+                    "description": "device UUID to isolate",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": false,
+                    "contains": [],
+                    "value_list": [],
+                    "default": "",
+                    "order": 0,
+                    "name": "device_id"
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.device_id",
+                    "data_type": "string",
+                    "contains": [],
+                    "column_name": "device_id",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "column_name": "status",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        }
+    ],
+    "copied_from_id": 120,
+    "copied_from_version": "2.0.0",
+    "directory": "elementssecuritycenter_5bcff6f9-3a65-49e6-8f7c-427898bde829",
+    "version": 1,
+    "appname": "-",
+    "executable": "spawn3",
+    "disabled": false,
+    "pip3_dependencies": {
+        "pypi": [
+            {
+                "module": "beautifulsoup4"
+            },
+            {
+                "module": "certifi"
+            },
+            {
+                "module": "chardet"
+            },
+            {
+                "module": "idna"
+            },
+            {
+                "module": "pytz"
+            },
+            {
+                "module": "requests"
+            },
+            {
+                "module": "soupsieve"
+            },
+            {
+                "module": "urllib3"
+            }
+        ]
+    },
+    "custom_made": true
+}
