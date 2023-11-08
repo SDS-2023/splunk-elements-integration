@@ -1,11 +1,6 @@
-from unittest.mock import MagicMock
 from unittest.mock import patch
 from connector_mock import Connector
-from connector_mock import ActionResult
-import sys
-sys.modules['phantom.action_result'] = MagicMock()
-sys.modules['phantom.app'] = MagicMock()
-sys.path.append('../phElements Security Center')
+from phantom.action_result import ActionResult
 from sei.on_poll import on_poll
     
 config_connector = {
@@ -48,9 +43,7 @@ config_connector = {
     "message": "Message"
 }
 
-action_result = ActionResult()
-
-@patch('sei.get_events', return_value=["0000", 0, action_result])
+@patch('sei.get_events', return_value=["0000", 0, ActionResult()])
 def test_on_poll(mock_get_events):
     connector = Connector(config_connector)
     assert on_poll(connector, None) == 1

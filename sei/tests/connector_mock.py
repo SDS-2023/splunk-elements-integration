@@ -1,17 +1,4 @@
-class ActionResult(object):
-    def update_summary(self, arg):
-        return {
-                "num_data": 0
-                }
-    def get_data(self):
-        return '{ "name":"event1" }'
-    def set_status(self, arg):
-        return 1
-    def get_status(self):
-        return 0
-    def add_data(self, arg):
-        return 0
-
+from phantom.action_result import ActionResult
 class Connector(object):
     def __init__(self, config_connector):
         self._timestamp = config_connector["timestamp"]

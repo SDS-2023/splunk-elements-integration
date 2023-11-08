@@ -1,9 +1,4 @@
-from unittest.mock import MagicMock
 from connector_mock import Connector
-import sys
-sys.modules['phantom.action_result'] = MagicMock()
-sys.modules['phantom.app'] = MagicMock()
-#sys.path.append('../phElements Security Center')
 from sei.get_events import get_events
 
 config_connector = {
