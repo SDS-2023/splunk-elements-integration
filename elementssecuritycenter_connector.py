@@ -39,7 +39,7 @@ class ElementsSecurityCenterConnector(BaseConnector):
         # Do note that the app json defines the asset config, so please
         # modify this as you deem fit.
         self._base_url = None
-
+        self._timestamp = None
         self._client_id = None
         self._client_secret = None
 
@@ -133,6 +133,7 @@ class ElementsSecurityCenterConnector(BaseConnector):
 
         kwargs['headers'] = kwargs.get("headers")
         kwargs['params'] = kwargs.get("params")
+        kwargs['data'] = kwargs.get("data")
         kwargs['json'] = kwargs.get("json")
         resp_json = None
 
@@ -202,6 +203,8 @@ class ElementsSecurityCenterConnector(BaseConnector):
             ret_val = sei.on_poll(self, param)   
         elif action_id == 'isolate_device':
             ret_val = sei.isolate_device(self, param)
+        elif action_id == 'device_details':
+            ret_val = sei.device_details(self, param)    
         elif action_id == 'test_connectivity':
             ret_val = self._handle_test_connectivity(param)
 
@@ -223,7 +226,7 @@ class ElementsSecurityCenterConnector(BaseConnector):
         # Optional values should use the .get() function
         optional_config_name = config.get('optional_config_name')
         """
-
+        self._timestamp = config.get('timestamp')
         self._base_url = config.get('base_url')
         self._client_id = config.get('client_id')
         self._client_secret = config.get('client_secret')
