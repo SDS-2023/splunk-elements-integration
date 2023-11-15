@@ -2,8 +2,10 @@ from unittest.mock import patch
 from connector_mock import Connector
 from phantom.action_result import ActionResult
 from sei.on_poll import on_poll
-    
-config_connector = {
+
+@patch('sei.get_events', return_value=["0000", 0, ActionResult()])
+def test_on_poll(mock_get_events):
+    config_connector = {
     "timestamp": "2022-08-01T00:00:01Z",
     "state":{
             "last_poll": "poll",
@@ -41,9 +43,6 @@ config_connector = {
                             ]
                     },
     "message": "Message"
-}
-
-@patch('sei.get_events', return_value=["0000", 0, ActionResult()])
-def test_on_poll(mock_get_events):
+    }
     connector = Connector(config_connector)
     assert on_poll(connector, None) == 1

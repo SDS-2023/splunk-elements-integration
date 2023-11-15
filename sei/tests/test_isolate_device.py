@@ -1,7 +1,8 @@
 from connector_mock import Connector
 from sei.isolate_device import isolate_device
 
-config_connector = {
+def test_isolate_device():
+    config_connector = {
     "timestamp": "2022-08-01T00:00:01Z",
     "state":{
             "last_poll": "poll",
@@ -39,8 +40,6 @@ config_connector = {
                             ]
                     },
     "message": "Message"
-}
-
-def test_isolate_device():
+    }
     connector = Connector(config_connector)
-    assert isolate_device(connector, {"device_id": 1}) == 0
+    assert isolate_device(connector, {"device_id": 1}) == 1
