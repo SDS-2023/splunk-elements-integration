@@ -3,7 +3,7 @@ from connector_mock import Connector
 from phantom.action_result import ActionResult
 from sei.on_poll import on_poll
 
-@patch('sei.get_events', return_value=["0000", 0, ActionResult()])
+@patch('sei.get_events', return_value=["0000", '2021-08-01T00:00:01Z', ActionResult()])
 def test_on_poll(mock_get_events):
     config_connector = {
     "timestamp": "2022-08-01T00:00:01Z",
@@ -19,14 +19,14 @@ def test_on_poll(mock_get_events):
                     "items":[
                                 {
                                     "id": 0,
-                                    "persistenceTimestamp": 20,
+                                    "persistenceTimestamp": '2020-08-01T00:00:01Z',
                                     "severity": "critical",
                                     "operationName" : "isolateFromNetwork",
                                     "status": "pending"
                                 },
                                 {
                                     "id": 1,
-                                    "persistenceTimestamp": 30,
+                                    "persistenceTimestamp": '2030-08-01T00:00:01Z',
                                     "severity": "critical",
                                     "operationName" : "isolateFromNetwork",
                                     "status": "pending"
@@ -45,4 +45,7 @@ def test_on_poll(mock_get_events):
     "message": "Message"
     }
     connector = Connector(config_connector)
-    assert on_poll(connector, None) == 1
+    on_poll(connector, [])
+    assert connector._state["isolated_devices"] == []
+    assert connector._state["last_poll"] == '2021-08-01T00:00:01Z'
+    assert connector._state["container_id"] == 0

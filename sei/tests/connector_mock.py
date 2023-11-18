@@ -8,7 +8,7 @@ class Connector(object):
         self._base_url = config_connector["base_url"]
         self.response = config_connector["response"]
     def save_container(self, container, fail_on_duplicate):
-        return 0,"Message",0
+        return 0, "Message", 0
     def get_container_info(self, container_id):
         return [False, True]
     def save_artifacts(self, artifacts):

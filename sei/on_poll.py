@@ -1,5 +1,5 @@
 import phantom.app as phantom
-
+from phantom.action_result import ActionResult
 import sei
 
 def on_poll(connector, param):
@@ -11,8 +11,8 @@ def on_poll(connector, param):
                      'container_type': 'default', "run_automation": True}
         success, message, container_id = connector.save_container(container, fail_on_duplicate=True)
 
-
-    artifacts, new_timestamp, action_result = sei.get_events(connector, param, container_id, timestamp)
+    action_result = connector.add_action_result(ActionResult(dict(param)))
+    artifacts, new_timestamp, action_result = sei.get_events(connector, action_result, container_id, timestamp)
     if len(artifacts) > 0:
             success, message, id_list = connector.save_artifacts(artifacts)
 

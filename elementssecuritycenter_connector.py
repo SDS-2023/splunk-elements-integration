@@ -199,12 +199,13 @@ class ElementsSecurityCenterConnector(BaseConnector):
         action_id = self.get_action_identifier()
 
         self.debug_print("action_id", self.get_action_identifier())
+        action_result = self.add_action_result(ActionResult(dict(param)))
         if action_id == 'on_poll':
-            ret_val = sei.on_poll(self, param)   
+            ret_val = sei.on_poll(self, action_result, param)   
         elif action_id == 'isolate_device':
-            ret_val = sei.isolate_device(self, param)
+            ret_val = sei.isolate_device(self, action_result, param)
         elif action_id == 'device_details':
-            ret_val = sei.device_details(self, param)    
+            ret_val = sei.device_details(self, action_result, param)    
         elif action_id == 'test_connectivity':
             ret_val = self._handle_test_connectivity(param)
 

@@ -1,4 +1,5 @@
 from connector_mock import Connector
+from phantom.action_result import ActionResult
 from sei.get_events import get_events
 
 def test_get_events():
@@ -41,9 +42,9 @@ def test_get_events():
                     },
     "message": "Message"
     }
+    action_result = ActionResult()
     connector = Connector(config_connector)
-    result = get_events(connector, {"device_id": 1, "anchor": 0}, 2, '2022-08-01T00:00:01Z')
-    assert result[:2] == ([
+    assert get_events(connector, action_result, 2, '2022-08-01T00:00:01Z') == ([
     {"name": 0, "label": "critical", "severity": 
     "critical",'artifact_type': 'event', 
     "data":{
@@ -78,7 +79,7 @@ def test_get_events():
                 "status": "pending"
             }, 
     "container_id": 2, 'run_automation': True}
-    ], '2020-08-01T00:00:01Z')
+    ], '2020-08-01T00:00:01Z', action_result)
 
     config_connector = {
     "timestamp": "2022-08-01T00:00:01Z",
@@ -104,6 +105,6 @@ def test_get_events():
                     },
     "message": "Message"
     }
+    action_result = ActionResult()
     connector = Connector(config_connector)
-    result = get_events(connector, {"device_id": 1, "anchor": 0}, 2, '2010-08-01T00:00:01Z')
-    assert result[:2] == ([], '2010-08-01T00:00:01Z')
+    assert get_events(connector, action_result, 2, '2010-08-01T00:00:01Z') == ([], '2010-08-01T00:00:01Z', action_result)

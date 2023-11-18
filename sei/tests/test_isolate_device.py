@@ -1,4 +1,5 @@
 from connector_mock import Connector
+from phantom.action_result import ActionResult
 from sei.isolate_device import isolate_device
 
 def test_isolate_device():
@@ -16,14 +17,14 @@ def test_isolate_device():
                     "items":[
                                 {
                                     "id": 0,
-                                    "persistenceTimestamp": 20,
+                                    "persistenceTimestamp": '2020-08-01T00:00:01Z',
                                     "severity": "critical",
                                     "operationName" : "isolateFromNetwork",
                                     "status": "pending"
                                 },
                                 {
                                     "id": 1,
-                                    "persistenceTimestamp": 30,
+                                    "persistenceTimestamp": '2030-08-01T00:00:01Z',
                                     "severity": "critical",
                                     "operationName" : "isolateFromNetwork",
                                     "status": "pending"
@@ -41,5 +42,7 @@ def test_isolate_device():
                     },
     "message": "Message"
     }
+    action_result = ActionResult()
     connector = Connector(config_connector)
-    assert isolate_device(connector, {"device_id": 1}) == 1
+    isolate_device(connector, action_result, {"device_id": 1})
+    assert action_result.update_summary({}) == {'completed': True, 'isolated': True, 'num_data': 0}

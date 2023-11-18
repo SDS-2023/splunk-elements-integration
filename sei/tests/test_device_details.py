@@ -1,4 +1,5 @@
 from connector_mock import Connector
+from phantom.action_result import ActionResult
 from sei.device_details import device_details
 
 def test_device_details():
@@ -16,14 +17,14 @@ def test_device_details():
                     "items":[
                                 {
                                     "id": 0,
-                                    "persistenceTimestamp": 20,
+                                    "persistenceTimestamp": '2020-08-01T00:00:01Z',
                                     "severity": "critical",
                                     "operationName" : "isolateFromNetwork",
                                     "status": "pending"
                                 },
                                 {
                                     "id": 1,
-                                    "persistenceTimestamp": 30,
+                                    "persistenceTimestamp": '2030-08-01T00:00:01Z',
                                     "severity": "critical",
                                     "operationName" : "isolateFromNetwork",
                                     "status": "pending"
@@ -41,5 +42,11 @@ def test_device_details():
                     },
     "message": "Message"
     }
+    action_result = ActionResult()
     connector = Connector(config_connector)
-    assert device_details(connector, {"device_id": 1}) == 1
+    device_details(connector, action_result, {"device_id": 1})
+    assert action_result.get_data()[0] == { "isolate_queued" : True, "id": 0,
+                                            "persistenceTimestamp": '2020-08-01T00:00:01Z',
+                                            "severity": "critical",
+                                            "operationName" : "isolateFromNetwork",
+                                            "status": "pending"}
