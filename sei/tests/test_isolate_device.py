@@ -45,4 +45,4 @@ def test_isolate_device():
     action_result = ActionResult()
     connector = Connector(config_connector)
     isolate_device(connector, action_result, {"device_id": 1})
-    assert action_result.update_summary({}) == {'completed': True, 'isolated': True, 'num_data': 0}
+    assert action_result.update_summary({}) == {'completed': True, 'isolated': True}
