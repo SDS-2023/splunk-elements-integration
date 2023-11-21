@@ -44,8 +44,9 @@ def test_on_poll(mock_get_events):
                     },
     "message": "Message"
     }
+    action_result = ActionResult()
     connector = Connector(config_connector)
-    on_poll(connector, [])
+    on_poll(connector, action_result)
     assert connector._state["isolated_devices"] == []
     assert connector._state["last_poll"] == '2021-08-01T00:00:01Z'
     assert connector._state["container_id"] == 0

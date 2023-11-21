@@ -34,6 +34,5 @@ def isolate_device(connector, action_result, param):
             return action_result.get_status()
 
     summary = action_result.update_summary({'completed': True, 'isolated': isolated})
-    summary['num_data'] = len(action_result.get_data())
 
     return action_result.set_status(phantom.APP_SUCCESS)

@@ -130,11 +130,6 @@ class ElementsSecurityCenterConnector(BaseConnector):
     # **kwargs can be any additional parameters that requests.request accepts
 
         config = self.get_config()
-
-        kwargs['headers'] = kwargs.get("headers")
-        kwargs['params'] = kwargs.get("params")
-        kwargs['data'] = kwargs.get("data")
-        kwargs['json'] = kwargs.get("json")
         resp_json = None
 
         try:
@@ -201,7 +196,7 @@ class ElementsSecurityCenterConnector(BaseConnector):
         self.debug_print("action_id", self.get_action_identifier())
         action_result = self.add_action_result(ActionResult(dict(param)))
         if action_id == 'on_poll':
-            ret_val = sei.on_poll(self, action_result, param)   
+            ret_val = sei.on_poll(self, action_result)   
         elif action_id == 'isolate_device':
             ret_val = sei.isolate_device(self, action_result, param)
         elif action_id == 'device_details':
