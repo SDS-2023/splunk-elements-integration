@@ -43,6 +43,14 @@
             "order": 2,
             "name": "client_secret",
             "id": 2
+        },
+        "timestamp": {
+            "description": "timestamp",
+            "data_type": "string",
+            "required": false,
+            "order": 3,
+            "name": "timestamp",
+            "id": 3
         }
     },
     "actions": [
@@ -112,6 +120,251 @@
                 {
                     "data_path": "summary.total_objects_successful",
                     "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.data",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.summary.*.completed",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.summary.*.isolated",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "device_details",
+            "identifier": "device_details",
+            "description": "Get device details",
+            "verbose": "",
+            "type": "generic",
+            "read_only": false,
+            "parameters": {
+                "device_id": {
+                    "description": "device UUID to insppect",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": false,
+                    "contains": [],
+                    "value_list": [],
+                    "default": "",
+                    "order": 0,
+                    "name": "device_id"
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.parameter.device_id",
+                    "data_type": "string",
+                    "contains": [],
+                    "column_name": "device_id",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "column_name": "status",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.data",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "action_result.data.isolate_queued",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.biosVersion",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.malwareDbVersion",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.lastUser",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.dnsAddress",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.subscription.productVariant",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.subscription.name",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.subscription.key",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.systemDriveTotalSize",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.clientVersion",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.type",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.dataguardState",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.protectionStatusOverview",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.winsAddress",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.macAddresses",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.protectionStatus",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.company.name",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.company.id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.id",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.state",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.publicInternet",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.computerModel",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.profileState",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.serialNumber",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.os.name.",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.os.version.",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.os.endOfLife.",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.publicIpAddress",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.physicalMemoryFree",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.malwareState",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.discEncryptionEnabled",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.physicalMemoryTotalSize",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.statusUpdateTimestamp",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.registrationTimestamp",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.systemDriveFreeSpace",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.name",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.applicationControlState",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.online",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.ipAddresses",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.currentUserAdmin",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.malwareDbUpdateTimestamp",
+                    "data_type": "string"
+                },
+        
+                {
+                    "data_path": "action_result.data.deviceControlState",
+                    "data_type": "string"
                 }
             ],
             "render": {
