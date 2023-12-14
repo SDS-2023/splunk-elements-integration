@@ -130,6 +130,7 @@ class ElementsSecurityCenterConnector(BaseConnector):
     # **kwargs can be any additional parameters that requests.request accepts
 
         config = self.get_config()
+
         resp_json = None
 
         try:
@@ -162,17 +163,18 @@ class ElementsSecurityCenterConnector(BaseConnector):
     def _handle_test_connectivity(self, param):
         # Add an action result object to self (BaseConnector) to represent the action for this param
         action_result = self.add_action_result(ActionResult(dict(param)))
-
-        # NOTE: test connectivity does _NOT_ take any parameters
-        # i.e. the param dictionary passed to this handler will be empty.
-        # Also typically it does not add any data into an action_result either.
-        # The status and progress messages are more important.
-
         self.save_progress("Connecting to endpoint")
-        # make rest call
-        ret_val, response = self._make_rest_call(
-            '/endpoint', action_result, params=None, headers=None
-        )
+
+  
+        client_id = self._client_id
+        client_secret = self._client_secret
+        
+        data = {"grant_type": "client_credentials", "scope": "connect.api.read connect.api.write"}
+        ret_val, response = self._make_rest_call("as/token.oauth2", action_result, data=data, headers=None, method="post", auth=(client_id, client_secret))
+        token = response['access_token']
+        print(token)
+        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        action_result.add_data({"token": token})
 
         if phantom.is_fail(ret_val):
             # the call to the 3rd party device or service failed, action result should contain all the error details
@@ -180,12 +182,9 @@ class ElementsSecurityCenterConnector(BaseConnector):
             self.save_progress("Test Connectivity Failed.")
             # return action_result.get_status()
 
-        # Return success
-        # self.save_progress("Test Connectivity Passed")
-        # return action_result.set_status(phantom.APP_SUCCESS)
+        self.save_progress("Test Connectivity Passed")
+        return action_result.set_status(phantom.APP_SUCCESS)
 
-        # For now return Error with a message, in case of success we don't set the message, but use the summary
-        return action_result.set_status(phantom.APP_ERROR, "Action not yet implemented")
 
     def handle_action(self, param):
         ret_val = phantom.APP_SUCCESS

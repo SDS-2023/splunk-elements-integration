@@ -43,6 +43,6 @@ def device_details(connector, action_result, param):
     if phantom.is_fail(ret_val):
         return action_result.get_status()
 
-    summary = action_result.update_summary({'Completed': True})
+    summary = action_result.update_summary({'completed': True})
 
     return action_result.set_status(phantom.APP_SUCCESS)
