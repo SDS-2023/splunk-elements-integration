@@ -130,7 +130,6 @@ class ElementsSecurityCenterConnector(BaseConnector):
     # **kwargs can be any additional parameters that requests.request accepts
 
         config = self.get_config()
-
         resp_json = None
 
         try:

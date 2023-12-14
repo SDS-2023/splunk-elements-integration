@@ -4,6 +4,7 @@ def isolate_device(connector, action_result, param):
     connector.save_progress("In action handler for: {0}".format(connector.get_action_identifier()))
     isolated = False
     devices = [param['device_id']]
+
     client_id = connector._client_id
     client_secret = connector._client_secret
 
@@ -31,6 +32,7 @@ def isolate_device(connector, action_result, param):
 
     if phantom.is_fail(ret_val):
         return action_result.get_status()
+
 
     summary = action_result.update_summary({'completed': True, 'isolated': isolated})
 

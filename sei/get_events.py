@@ -3,6 +3,7 @@ def get_events(connector, action_result, containerId, timestamp):
     client_id = connector._client_id
     client_secret = connector._client_secret
     new_timestamp = timestamp
+    
     data = {"grant_type": "client_credentials", "scope": "connect.api.read connect.api.write"}
     ret_val, response = connector._make_rest_call("as/token.oauth2", action_result, data=data, headers=None, method="post", auth=(client_id, client_secret))
     token = response['access_token']
@@ -16,11 +17,13 @@ def get_events(connector, action_result, containerId, timestamp):
     events = None
 
     headers = {'Authorization': f'Bearer {token}', "Accept": "application/json"}
+
     params = {"organizationId": organizationId, "engineGroup": ["edr", "epp", "ecp"], "persistenceTimestampStart": timestamp, "exclusiveStart": True}
 
     ret_val, response = connector._make_rest_call(
         "security-events/v1/security-events", action_result, data=params, headers=headers, method="post"
     )
+
     artifacts = []
     if response is not None:
         
@@ -54,4 +57,5 @@ def get_events(connector, action_result, containerId, timestamp):
                                     'artifact_type': 'event', "data": i, "cef": i, "container_id": containerId, 'run_automation': True}
                         artifacts.append(artifact)
                 success, message, id_list = connector.save_artifacts(artifacts)
+
     return artifacts, new_timestamp, action_result

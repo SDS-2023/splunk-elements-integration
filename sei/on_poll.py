@@ -7,7 +7,6 @@ def on_poll(connector, action_result):
     container_id = connector._state["container_id"] if "container_id" in connector._state.keys() else None
 
     print(timestamp)
-
     if container_id is None or connector.get_container_info(container_id)[0] == False:
         container = {'name': 'WithSecure - security events', 'label': 'events',
                      'container_type': 'default', "run_automation": True}
@@ -19,6 +18,5 @@ def on_poll(connector, action_result):
     connector._state["last_poll"] = new_timestamp
     
     summary = action_result.update_summary({'Completed': True})
-    summary['num_data'] = len(action_result.get_data())
 
     return action_result.set_status(phantom.APP_SUCCESS)
